@@ -100,9 +100,9 @@ public class CommandButton {
             }
         }
         
-        System.out.println(pk);
+        //System.out.println(pk);
         sql = sql +"PRIMARY KEY("+pk+")"+ "\n);";
-        System.out.println(count);
+        //System.out.println(count);
         return sql;
     }
 

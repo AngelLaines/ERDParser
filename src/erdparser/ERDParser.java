@@ -24,7 +24,7 @@ public class ERDParser {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException {
-        
+
         FileReader fp = new FileReader("university-erd.json");
 
         // Crear el tokenizador del documento JSON  
@@ -57,51 +57,46 @@ public class ERDParser {
             // Para cada entidad, mostrar los atributos
             JSONArray atributos = entidad.getJSONArray("atributos");
             Iterator attribIt = atributos.iterator();
-            
-            int i=0;
-            String temp="";
+
+            int i = 0;
+            String temp = "";
             while (attribIt.hasNext()) {
                 JSONObject atributo = (JSONObject) attribIt.next();
                 System.out.print("\t");
                 System.out.print(atributo.getString("nombre"));
-                
+
                 if (atributo.getInt("tipo") == 1) {
                     System.out.println(" *");
-                    
+
                 } else {
                     System.out.println();
                 }
                 i++;
             }
-            attribIt=atributos.iterator();
-            Object[][] tabla=new Object[i][6];
+            attribIt = atributos.iterator();
+            Object[][] tabla = new Object[i][6];
             //tabla[][]=new Object[i][6];
-            i=0;
+            i = 0;
             while (attribIt.hasNext()) {
                 JSONObject atributo = (JSONObject) attribIt.next();
-                //System.out.print("\t");
-               //System.out.print(atributo.getString("nombre"));
-                tabla[i][0]=atributo.getString("nombre").toString();
-               // tabla[i][1]=null;
-               // tabla[i][2]=null;
-               // tabla[i][3]=null;
-                //tabla[i][4]=null;
-                //tabla[i][5]=null;
+                
+                tabla[i][0] = atributo.getString("nombre").toString();
+                
                 if (atributo.getInt("tipo") == 1) {
                     //System.out.println(" *");
-                    temp=tabla[i][0].toString();
-                    temp=temp+"*";
-                    tabla[i][0]=temp;
+                    temp = tabla[i][0].toString();
+                    temp = temp + "*";
+                    tabla[i][0] = temp;
                 } else {
                     //System.out.println();
                 }
-                
+
                 i++;
-            } 
-            TableDemo tab=new TableDemo(tabla,i,entityName);
+            }
+            TableDemo tab = new TableDemo(tabla, i, entityName);
             //Frm form=new Frm(tabla);
             //form.mein(tabla,entityName);
-            tab.main(tabla,entityName,i);
+            tab.main(tabla, entityName, i);
         }
         System.out.println("");
         System.out.println("** DEBILES **");
@@ -124,7 +119,7 @@ public class ERDParser {
             // Para cada entidad, mostrar los atributos
             JSONArray atributos = entidad.getJSONArray("atributos");
             Iterator attribIt = atributos.iterator();
-            int i=0;
+            int i = 0;
             while (attribIt.hasNext()) {
                 JSONObject atributo = (JSONObject) attribIt.next();
                 System.out.print("\t");
@@ -137,37 +132,36 @@ public class ERDParser {
                 }
                 i++;
             }
-         
-            String temp="";
-            attribIt=atributos.iterator();
-            Object[][] table=new Object[i][6];
+
+            String temp = "";
+            attribIt = atributos.iterator();
+            Object[][] table = new Object[i][6];
             //tabla[][]=new Object[i][6];
-            i=0;
+            i = 0;
             while (attribIt.hasNext()) {
                 JSONObject atributo = (JSONObject) attribIt.next();
                 //System.out.print("\t");
                 //System.out.print(atributo.getString("nombre"));
-                table[i][0]=atributo.getString("nombre");
+                table[i][0] = atributo.getString("nombre");
                 if (atributo.getInt("tipo") == 1) {
-                    temp=table[i][0].toString();
-                    temp=temp+"*";
-                    table[i][0]=temp;
+                    temp = table[i][0].toString();
+                    temp = temp + "*";
+                    table[i][0] = temp;
                     //System.out.println(" *");
                 } else {
                     //System.out.println();
                 }
-                
+
                 i++;
             }
-TableDemo tab=new TableDemo(table,i,entityName);
+            TableDemo tab = new TableDemo(table, i, entityName);
             //Frm form=new Frm(tabla);
             //form.mein(tabla,entityName);
-            tab.main(table,entityName,i);
+            tab.main(table, entityName, i);
         }
-        
-        
+
         System.out.println("");
-        
+
         // Solo recuperar los objetos que describen entidades
         JSONArray relations = JSONDoc.getJSONArray("relaciones");
 
@@ -180,7 +174,7 @@ TableDemo tab=new TableDemo(table,i,entityName);
 
             //System.out.println( rel );
             //System.out.println( rel.names());
-            System.out.println( rel.getString("nombre") );
+            System.out.println(rel.getString("nombre"));
 
             JSONArray cards = rel.getJSONArray("cardinalidades");
 

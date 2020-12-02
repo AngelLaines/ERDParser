@@ -17,10 +17,13 @@ public class CommandButton {
 
     JTable table;
     String name;
-
-    CommandButton(JTable table, String name) {
+    JComboBox ent;
+    JComboBox att;
+    CommandButton(JTable table, String name,JComboBox ent,JComboBox att) {
         this.table = table;
         this.name = name;
+        this.ent=ent;
+        this.att=att;
     }
 
     public String sentencia(int length) {

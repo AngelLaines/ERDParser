@@ -8,6 +8,8 @@ package erdparser;
 import java.awt.TextField;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 import javax.swing.JCheckBox;
 import org.json.JSONArray;
@@ -37,13 +39,46 @@ public class ERDParser {
         //Obtenet los nombres de los objetos 
         JSONArray names = JSONDoc.names();
         System.out.println(names);
+        String relaciones = "";
+        JSONArray relations = JSONDoc.getJSONArray("relaciones");
+
+        System.out.println("**** RELACIONES ****");
+        Iterator it = relations.iterator();
+
+        while (it.hasNext()) {
+            JSONObject rel = (JSONObject) it.next();
+
+            //System.out.println( rel );
+            //System.out.println( rel.names());
+            System.out.println(rel.getString("nombre"));
+            relaciones = relaciones + rel.getString("nombre") + "\n";
+            JSONArray cards = rel.getJSONArray("cardinalidades");
+
+            int n = cards.length();
+
+            for (int i = 0; i < n; i++) {
+                JSONObject e1 = cards.getJSONObject(i);
+
+                System.out.printf("\t%s (%s,%s)\n", e1.getString("entidad"),
+                        e1.getString("min"),
+                        e1.getString("max"));
+                relaciones = relaciones + String.format("\t%s (%s,%s)\n", e1.getString("entidad"),
+                        e1.getString("min"),
+                        e1.getString("max"));
+            }
+
+        }
+
+        System.out.println("");
 
         // Solo recuperar los objetos que describen entidades
         JSONArray entidades = JSONDoc.getJSONArray("entidades");
         System.out.println(entidades);
 
-        Iterator it = entidades.iterator();
-
+        it = entidades.iterator();
+        ArrayList<String> listaent = new ArrayList<>();
+        ArrayList<String> tabb = new ArrayList<>();
+        String att = "";
         // Procesar cada una de las entidades
         while (it.hasNext()) {
 
@@ -53,7 +88,8 @@ public class ERDParser {
             // Para cada entidad, mostrar su nombre
             String entityName = entidad.getString("nombre");
             System.out.println(entityName);
-
+            listaent.add(entityName);
+            att = entityName;
             // Para cada entidad, mostrar los atributos
             JSONArray atributos = entidad.getJSONArray("atributos");
             Iterator attribIt = atributos.iterator();
@@ -67,21 +103,23 @@ public class ERDParser {
 
                 if (atributo.getInt("tipo") == 1) {
                     System.out.println(" *");
-
+                    att = att + " " + atributo.getString("nombre");
                 } else {
                     System.out.println();
                 }
                 i++;
             }
+            tabb.add(att);
+            att = "";
             attribIt = atributos.iterator();
             Object[][] tabla = new Object[i][6];
             //tabla[][]=new Object[i][6];
             i = 0;
             while (attribIt.hasNext()) {
                 JSONObject atributo = (JSONObject) attribIt.next();
-                
+
                 tabla[i][0] = atributo.getString("nombre").toString();
-                
+
                 if (atributo.getInt("tipo") == 1) {
                     //System.out.println(" *");
                     temp = tabla[i][0].toString();
@@ -93,10 +131,10 @@ public class ERDParser {
 
                 i++;
             }
-            TableDemo tab = new TableDemo(tabla, i, entityName);
+            TableDemo tab = new TableDemo(tabla, i, entityName, relaciones, tabb, listaent);
             //Frm form=new Frm(tabla);
             //form.mein(tabla,entityName);
-            tab.main(tabla, entityName, i);
+            tab.main(tabla, entityName, i, relaciones, tabb, listaent);
         }
         System.out.println("");
         System.out.println("** DEBILES **");
@@ -105,7 +143,7 @@ public class ERDParser {
         System.out.println(debiles);
 
         it = debiles.iterator();
-
+        
         // Procesar cada una de las entidades debiles
         while (it.hasNext()) {
 
@@ -115,7 +153,7 @@ public class ERDParser {
             // Para cada entidad, mostrar su nombre
             String entityName = entidad.getString("nombre");
             System.out.println(entityName);
-
+            att = entityName;
             // Para cada entidad, mostrar los atributos
             JSONArray atributos = entidad.getJSONArray("atributos");
             Iterator attribIt = atributos.iterator();
@@ -127,12 +165,14 @@ public class ERDParser {
 
                 if (atributo.getInt("tipo") == 1) {
                     System.out.println(" *");
+                    att = att + " " + atributo.getString("nombre");
                 } else {
                     System.out.println();
                 }
                 i++;
             }
-
+            tabb.add(att);
+            att = "";
             String temp = "";
             attribIt = atributos.iterator();
             Object[][] table = new Object[i][6];
@@ -154,43 +194,15 @@ public class ERDParser {
 
                 i++;
             }
-            TableDemo tab = new TableDemo(table, i, entityName);
+            TableDemo tab = new TableDemo(table, i, entityName, relaciones, tabb, listaent);
             //Frm form=new Frm(tabla);
             //form.mein(tabla,entityName);
-            tab.main(table, entityName, i);
+            tab.main(table, entityName, i, relaciones, tabb, listaent);
         }
 
         System.out.println("");
 
         // Solo recuperar los objetos que describen entidades
-        JSONArray relations = JSONDoc.getJSONArray("relaciones");
-
-        System.out.println("**** RELACIONES ****");
-
-        it = relations.iterator();
-
-        while (it.hasNext()) {
-            JSONObject rel = (JSONObject) it.next();
-
-            //System.out.println( rel );
-            //System.out.println( rel.names());
-            System.out.println(rel.getString("nombre"));
-
-            JSONArray cards = rel.getJSONArray("cardinalidades");
-
-            int n = cards.length();
-
-            for (int i = 0; i < n; i++) {
-                JSONObject e1 = cards.getJSONObject(i);
-
-                System.out.printf("\t%s (%s,%s)\n", e1.getString("entidad"),
-                        e1.getString("min"),
-                        e1.getString("max"));
-
-            }
-
-        }
-
     }
 
 }

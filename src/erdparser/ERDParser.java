@@ -19,6 +19,12 @@ import org.json.JSONTokener;
 /**
  *
  * @author dell and more
+ * 
+ * Integrantes:
+ *  Angel Roberto Moreno Laines
+ *  Victor Hugo Vazquez Rojas
+ *  Bernardo Urquijo Mungarro
+ * 
  */
 public class ERDParser {
 

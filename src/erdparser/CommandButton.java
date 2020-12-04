@@ -17,13 +17,11 @@ public class CommandButton {
 
     JTable table;
     String name;
-    JComboBox ent;
-    JComboBox att;
-    CommandButton(JTable table, String name,JComboBox ent,JComboBox att) {
+    
+    CommandButton(JTable table, String name) {
         this.table = table;
         this.name = name;
-        this.ent=ent;
-        this.att=att;
+        
     }
 
     public String sentencia(int length) {
@@ -104,7 +102,10 @@ public class CommandButton {
         }
         
         //System.out.println(pk);
-        sql = sql +"PRIMARY KEY("+pk+")"+ "\n);";
+        if (pk.equals("")==false) {
+            sql = sql +"PRIMARY KEY("+pk+")";
+        }
+        
         //System.out.println(count);
         return sql;
     }
